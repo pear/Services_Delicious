@@ -18,7 +18,7 @@ require_once 'PEAR/PackageFileManager.php';
 /**
  * current version
  */
-$version = '0.1';
+$version = '0.2.0';
 
 /**
  * current state
@@ -29,7 +29,7 @@ $state = 'beta';
  * release notes
  */
 $notes = <<<EOT
-PEAR proposal
+Initial PEAR release
 EOT;
 
 /**
