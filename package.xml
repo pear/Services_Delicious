@@ -15,7 +15,7 @@ Services_Delicious allows you to select, add and delete your bookmarks from any 
     </maintainer>
   </maintainers>
   <release>
-    <version>0.2.0</version>
+    <version>0.2.0beta</version>
     <date>2004-11-23</date>
     <license>PHP License</license>
     <state>beta</state>
@@ -50,6 +50,20 @@ Services_Delicious allows you to select, add and delete your bookmarks from any 
       <license>PHP License</license>
       <state>beta</state>
       <notes>PEAR proposal</notes>
+    </release>
+    <release>
+      <version>0.2.0beta</version>
+      <date>2004-11-23</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>Initial PEAR release</notes>
+    </release>
+    <release>
+      <version>0.2.0-beta</version>
+      <date>2004-11-23</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>Initial PEAR release</notes>
     </release>
     <release>
       <version>0.2.0</version>
