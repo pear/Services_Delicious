@@ -1,0 +1,86 @@
+<html><head></head>
+<body><pre>Everything in /api requires HTTP-Auth.
+
+This document and the APIs herein are subject to change at any time. Sorry,
+I'm still developing this system.
+
+Important notes:
+- The URL for the API will be changing shortly. You should make this 
+  configurable. It'll probably end up looking something like
+  http://api.del.icio.us/1.0/api/etc
+- Please wait a bit between queries, or you are likely to get automatically
+  throttled.
+- Please watch for 503 errors and back-off appropriately. It means that 
+  you have been throttled.
+- Please let me (joshua-delicious@burri.to) know if you are going to release 
+  software that uses this publicly, so that I can at least have a heads-up
+  and hopefully test things out beforehand.
+- Please set your User-Agent to something identifiable. The default identifiers
+  like "Java/1.4.3" or "lwp-perl" etc tend to get banned from time to time.
+
+URLs should look like http://host.name/path/to/whatever?key1=val1&amp;key2=val2&amp;key3=val3....
+
+function: http://del.icio.us/api/posts/dates?
+	&amp;tag= filter by this tag - optional
+returns a list of dates with the number of posts at each date. 
+[tag] adds a filter
+
+function: http://del.icio.us/api/tags/get?
+returns a list of tags the user has used.
+
+function: http://del.icio.us/api/posts/get?
+	&amp;tag= filter by this tag - optional
+	&amp;dt= filter by this date
+returns a list of posts on a given date, filtered by tag. if no 
+date is supplied, most recent date will be used
+
+function: http://del.icio.us/api/posts/recent?
+	&amp;tag= filter by this tag - optional
+	&amp;count= number of items to retrieve - optional (defaults to 15, maximum 100)
+returns a list of most recent posts, possibly filtered by tag, maxes out at 100.
+
+function: http://del.icio.us/api/posts/all
+returns all posts. use sparingly.
+
+function: http://del.icio.us/api/posts/add?
+	&amp;url= url for post
+	&amp;description= description for post
+	&amp;extended= extended for post
+	&amp;tags= space-delimited list of tags
+	&amp;dt= datestamp for post, format "CCYY-MM-DDThh:mm:ssZ"
+makes a post to delicious. 
+the datestamp requires a LITERAL "T" and "Z" like in ISO8601 at
+http://www.cl.cam.ac.uk/~mgk25/iso-time.html. for example:
+"1984-09-01T14:21:31Z"
+
+function: http://del.icio.us/api/posts/delete?
+	&amp;url= url for post
+deletes a post from delicious
+
+function: http://del.icio.us/api/tags/rename?
+	&amp;old= old tag
+	&amp;new= new tag
+
+# currently disabled
+# function: http://del.icio.us/api/inbox/get?
+#         &amp;dt= filter by this date
+# returns a list of inbox entries
+# 
+# function: http://del.icio.us/api/inbox/dates?
+# returns a list of dates containing inbox entries
+# 
+# function: http://del.icio.us/api/inbox/subs?
+# returns a list of your subscriptions
+# 
+# function: http://del.icio.us/api/inbox/sub?
+# 	&amp;user= username
+# 	&amp;tag = tag - optional, leave blank for all posts
+# adds a subscription
+# 
+# function: http://del.icio.us/api/inbox/unsub?
+# 	&amp;user= username
+# 	&amp;tag = tag - optional, leave blank for all posts
+# removes a subscription
+
+</pre>
+</body></html>

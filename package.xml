@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
+<package version="1.0">
+  <name>Services_Delicious</name>
+  <summary>Client for the del.icio.us web service.</summary>
+  <description>Services_Delicious is a client for the REST-based web service of del.icio.us.
+del.icio.us is a social bookmarks manager. It allows you to easily add sites you like to your personal collection of links, to categorize those sites with keywords, and to share your collection not only between your own browsers and machines, but also with others.
+Services_Delicious allows you to select, add and delete your bookmarks from any PHP script.</description>
+  <maintainers>
+    <maintainer>
+      <user>schst</user>
+      <name>Stephan Schmidt</name>
+      <email>schst@php-tools.net</email>
+      <role>lead</role>
+    </maintainer>
+  </maintainers>
+  <release>
+    <version>0.1</version>
+    <date>2004-11-05</date>
+    <license>PHP License</license>
+    <state>beta</state>
+    <notes>PEAR proposal</notes>
+    <deps>
+      <dep type="pkg" rel="has" optional="no">PEAR</dep>
+      <dep type="pkg" rel="has" optional="no">HTTP_Request</dep>
+      <dep type="pkg" rel="ge" version="0.12.0" optional="no">XML_Serializer</dep>
+    </deps>
+    <filelist>
+      <dir baseinstalldir="Services" name="/">
+       <dir name="docs">
+        <file role="doc" name="api.txt"/>
+       </dir> <!-- docs -->
+       <dir name="examples">
+        <file role="doc" name="addPost.php"/>
+        <file role="doc" name="config.php"/>
+        <file role="doc" name="deletePost.php"/>
+        <file role="doc" name="getDates.php"/>
+        <file role="doc" name="getPosts.php"/>
+        <file role="doc" name="getTags.php"/>
+        <file role="doc" name="renameTag.php"/>
+       </dir> <!-- examples -->
+       <file role="php" name="Delicious.php"/>
+      </dir> <!-- / -->
+    </filelist>
+  </release>
+  <changelog>
+    <release>
+      <version>0.1</version>
+      <date>2004-11-05</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>PEAR proposal</notes>
+    </release>
+  </changelog>
+</package>
