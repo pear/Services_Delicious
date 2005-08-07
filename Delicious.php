@@ -148,7 +148,7 @@ class Services_Delicious
     }
 
    /**
-    * Get all tags
+    * Get all dates on which posts have been added.
     *
     * This will return an associative array containing dates
     * in the keys and their occurences in the values:
