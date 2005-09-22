@@ -18,7 +18,7 @@ require_once 'PEAR/PackageFileManager.php';
 /**
  * current version
  */
-$version = '0.2.0beta';
+$version = '0.2.1';
 
 /**
  * current state
@@ -29,7 +29,7 @@ $state = 'beta';
  * release notes
  */
 $notes = <<<EOT
-Initial PEAR release
+- fixed bug #5173: getRecentPosts fails
 EOT;
 
 /**
