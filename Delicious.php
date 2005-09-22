@@ -222,7 +222,7 @@ class Services_Delicious
         	$params['tag'] = $tags;
         }
         
-        $result = $this->_sendRequest('posts', 'get', $params);
+        $result = $this->_sendRequest('posts', 'recent', $params);
         if (PEAR::isError($result)) {
         	return $result;
         }
