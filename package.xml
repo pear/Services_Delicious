@@ -13,6 +13,12 @@ Services_Delicious allows you to select, add and delete your bookmarks from any 
       <email>schst@php-tools.net</email>
       <role>lead</role>
     </maintainer>
+    <maintainer>
+      <user>ttsuruoka</user>
+      <name>Tatsuya Tsuruoka</name>
+      <email>ttsuruoka@p4life.jp</email>
+      <role>lead</role>
+    </maintainer>
   </maintainers>
   <release>
     <version>0.2.0beta</version>
