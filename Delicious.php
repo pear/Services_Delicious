@@ -48,9 +48,10 @@ require_once 'HTTP/Request.php';
  * - delete
  * your bookmarks from PHP.
  *
- * @author		Stephan Schmidt <schst@php-tools.net>
- * @package		Services_Delicious
- * @version		0.1
+ * @author      Stephan Schmidt <schst@phap-tools.net>
+ * @author      Tatsuya Tsuruoka <ttsuruoka@p4life.jp>
+ * @package     Services_Delicious
+ * @version     0.3
  */
 class Services_Delicious
 {
@@ -87,6 +88,14 @@ class Services_Delicious
     var $_us = null;
     
    /**
+    * Last accessed time
+    *
+    * @access  private
+    * @var     integer
+    */
+    var $_last_time = null;
+
+   /**
     * Create a new client
     *
     * @access  public
@@ -119,11 +128,11 @@ class Services_Delicious
     {
         $result = $this->_sendRequest('tags', 'get');
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
         $tags = array();
         foreach ($result['tag'] as $tmp) {
-        	$tags[$tmp['tag']] = $tmp['count'];
+            $tags[$tmp['tag']] = $tmp['count'];
         }
         return $tags;
     }
@@ -167,11 +176,11 @@ class Services_Delicious
     {
         $result = $this->_sendRequest('posts', 'dates');
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
         $dates = array();
         foreach ($result['date'] as $tmp) {
-        	$dates[$tmp['date']] = $tmp['count'];
+            $dates[$tmp['date']] = $tmp['count'];
         }
         return $dates;
     }
@@ -188,21 +197,21 @@ class Services_Delicious
     {
         $params = array();
         if (!empty($tags)) {
-        	$params['tag'] = $tags;
+            $params['tag'] = $tags;
         }
         if (!empty($date)) {
-        	$params['dt'] = $date;
+            $params['dt'] = $date;
         }
         
         $result = $this->_sendRequest('posts', 'get', $params);
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
 
         $posts  = array();
         foreach ($result['post'] as $post) {
             $post['tag'] = explode(' ', $post['tag']);
-        	array_push($posts, $post);
+            array_push($posts, $post);
         }
         return $posts;
     }
@@ -219,18 +228,18 @@ class Services_Delicious
     {
         $params = array('count' => $max);
         if (!empty($tags)) {
-        	$params['tag'] = $tags;
+            $params['tag'] = $tags;
         }
         
         $result = $this->_sendRequest('posts', 'recent', $params);
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
 
         $posts  = array();
         foreach ($result['post'] as $post) {
             $post['tag'] = explode(' ', $post['tag']);
-        	array_push($posts, $post);
+            array_push($posts, $post);
         }
         
         return $posts;
@@ -248,13 +257,13 @@ class Services_Delicious
     {
         $result = $this->_sendRequest('posts', 'all');
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
 
         $posts  = array();
         foreach ($result['post'] as $post) {
             $post['tag'] = explode(' ', $post['tag']);
-        	array_push($posts, $post);
+            array_push($posts, $post);
         }
         
         return $posts;
@@ -273,19 +282,19 @@ class Services_Delicious
     function addPost($url, $description = null, $extended = null, $tags = null, $date = null)
     {
         if (is_array($url)) {
-        	$params = $url;
-        	if (!isset($params['dt'])) {
-        		$params['dt'] = strftime('%Y-%m-%dT%h:%i:%sZ', time());
-        	}
+            $params = $url;
+            if (!isset($params['dt'])) {
+                $params['dt'] = strftime('%Y-%m-%dT%h:%i:%sZ', time());
+            }
         } else {
-        	if (is_null($date)) {
-        		$date = strftime('%Y-%m-%dT%h:%i:%sZ', time());
-        	} else {
-        	    $tmp = strtotime($date);
-        	    if ($tmp) {
-            		$date = strftime('%Y-%m-%dT%h:%i:%sZ', $date);
-        	    }
-        	}
+            if (is_null($date)) {
+                $date = strftime('%Y-%m-%dT%h:%i:%sZ', time());
+            } else {
+                $tmp = strtotime($date);
+                if ($tmp) {
+                    $date = strftime('%Y-%m-%dT%h:%i:%sZ', $date);
+                }
+            }
             $params = array(
                              'url'         => $url,
                              'description' => $description,
@@ -332,12 +341,20 @@ class Services_Delicious
     */
     function _sendRequest($subject, $verb, $params = array())
     {
+        list($usec, $sec) = explode(' ', microtime());
+        $current_time = $sec . sprintf('%03d', (integer)($usec * 1000));
+        $last_time = $this->_last_time;
+        $this->_last_time = $current_time;
+        if ($current_time - $last_time < 1000) {
+            return PEAR::raiseError('Wait 1 second between queries');
+        }
+        
         $url = sprintf('%s/%s/%s?', $this->_apiUrl, $subject, $verb);
         foreach ($params as $key => $value) {
             if (is_array($value)) {
-            	$value = implode(' ', $value);
+                $value = implode(' ', $value);
             }
-        	$url = $url . '&' . $key . '=' . urlencode($value);
+            $url = $url . '&' . $key . '=' . urlencode($value);
         }
         
         $request = &new HTTP_Request($url);
@@ -352,19 +369,19 @@ class Services_Delicious
         $xml = $request->getResponseBody();
         
         if (!is_object($this->_us)) {
-        	$this->_us = &new XML_Unserializer();
-        	$this->_us->setOption('parseAttributes', true);
-        	$this->_us->setOption('forceEnum', array(
-        	                                           'tag',
-        	                                           'post',
-        	                                           'date'
-        	                                       )
-        	                      );
+            $this->_us = &new XML_Unserializer();
+            $this->_us->setOption('parseAttributes', true);
+            $this->_us->setOption('forceEnum', array(
+                                                       'tag',
+                                                       'post',
+                                                       'date'
+                                                    )
+                                 );
         }
         
         $result = $this->_us->unserialize($xml);
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
         return $this->_us->getUnserializedData();
     }
@@ -380,19 +397,19 @@ class Services_Delicious
     function _resultToBoolean($result)
     {
         if (PEAR::isError($result)) {
-        	return $result;
+            return $result;
         }
         if ($result == 'done') {
-        	return true;
+            return true;
         }
         
         if ($result['code'] == 'done') {
-        	return true;
+            return true;
         }
         if (is_string($result)) {
-        	$error = $result;
+            $error = $result;
         } else {
-        	$error = $result['code'];
+            $error = $result['code'];
         }
         return PEAR::raiseError('Error from del.icio.us: '. $error);
     }
