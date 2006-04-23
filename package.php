@@ -18,7 +18,7 @@ require_once 'PEAR/PackageFileManager.php';
 /**
  * current version
  */
-$version = '0.2.1';
+$version = '0.3.0';
 
 /**
  * current state
@@ -29,7 +29,8 @@ $state = 'beta';
  * release notes
  */
 $notes = <<<EOT
-- fixed bug #5173: getRecentPosts fails
+- Implemented request #7293: Package requires handling to prevent throttling
+- Fixed bug #5173: getRecentPosts fail:
 EOT;
 
 /**
@@ -68,6 +69,7 @@ if (PEAR::isError($result)) {
 }
 
 $package->addMaintainer('schst', 'lead', 'Stephan Schmidt', 'schst@php-tools.net');
+$package->addMaintainer('ttsuruoka', 'lead', 'Tatsuya Tsuruoka', 'ttsuruoka@p4life.jp');
 
 $package->addDependency('PEAR', '', 'has', 'pkg', false);
 $package->addDependency('HTTP_Request', '', 'has', 'pkg', false);
