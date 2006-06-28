@@ -18,7 +18,7 @@ require_once 'PEAR/PackageFileManager.php';
 /**
  * current version
  */
-$version = '0.3.0';
+$version = '0.4.0';
 
 /**
  * current state
@@ -29,8 +29,7 @@ $state = 'beta';
  * release notes
  */
 $notes = <<<EOT
-- Implemented request #7293: Package requires handling to prevent throttling
-- Fixed bug #5173: getRecentPosts fail:
+- Implemented request #8044: Private saving of bookmarks 
 EOT;
 
 /**
