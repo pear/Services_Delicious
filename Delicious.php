@@ -276,10 +276,12 @@ class Services_Delicious
     * @param    string|array    url or all data for the post
     * @param    string          description
     * @param    string          extended description
-    * @param    
+    * @param    string          tags for the items
+    * @param    string          datestamp
+    * @param    string          make the item private if "$shared = 'no'"
     * @return   boolean
     */
-    function addPost($url, $description = null, $extended = null, $tags = null, $date = null)
+    function addPost($url, $description = null, $extended = null, $tags = null, $date = null, $shared = null)
     {
         if (is_array($url)) {
             $params = $url;
@@ -299,8 +301,9 @@ class Services_Delicious
                              'url'         => $url,
                              'description' => $description,
                              'extended'    => $extended,
-                             'tags'         => $tags,
-                             'dt'          => $date
+                             'tags'        => $tags,
+                             'dt'          => $date,
+                             'shared'      => $shared
                             );
         }
         
