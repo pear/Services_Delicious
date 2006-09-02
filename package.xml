@@ -22,15 +22,16 @@ Services_Delicious allows you to select, add and delete your bookmarks from any 
   </maintainer>
   </maintainers>
  <release>
-  <version>0.4.0</version>
-  <date>2006-06-28</date>
+  <version>0.5.0</version>
+  <date>2006-09-02</date>
   <license>PHP License</license>
   <state>beta</state>
-  <notes>- Implemented request #8044: Private saving of bookmarks</notes>
+  <notes>- Fixed bug #8528: Invalid response code</notes>
   <deps>
    <dep type="pkg" rel="has" optional="no">PEAR</dep>
    <dep type="pkg" rel="has" optional="no">HTTP_Request</dep>
    <dep type="pkg" rel="ge" version="0.12.0" optional="no">XML_Serializer</dep>
+   <dep type="ext" rel="has" optional="no">openssl</dep>
   </deps>
   <filelist>
    <dir name="/" baseinstalldir="Services">
@@ -51,6 +52,13 @@ Services_Delicious allows you to select, add and delete your bookmarks from any 
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.4.0</version>
+    <date>2006-06-28</date>
+    <license>PHP License</license>
+    <state>beta</state>
+    <notes>- Implemented request #8044: Private saving of bookmarks</notes>
+   </release>
    <release>
     <version>0.1</version>
     <date>2004-11-05</date>

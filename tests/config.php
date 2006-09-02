@@ -1,6 +1,10 @@
 <?php
-$username = '';
-$password = '';
+if (file_exists('config-local.php')) {
+    require_once 'config-local.php';
+} else {
+    $username = '';
+    $password = '';
+}
 
 if (empty($username)) {
     echo 'add your username and password';

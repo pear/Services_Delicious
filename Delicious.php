@@ -51,7 +51,7 @@ require_once 'HTTP/Request.php';
  * @author      Stephan Schmidt <schst@phap-tools.net>
  * @author      Tatsuya Tsuruoka <ttsuruoka@p4life.jp>
  * @package     Services_Delicious
- * @version     0.3
+ * @version     0.5
  */
 class Services_Delicious
 {
@@ -61,7 +61,7 @@ class Services_Delicious
     * @access  private
     * @var     string
     */
-    var $_apiUrl = 'http://del.icio.us/api';
+    var $_apiUrl = 'https://api.del.icio.us/v1';
     
    /**
     * Username
@@ -362,8 +362,8 @@ class Services_Delicious
         
         $request = &new HTTP_Request($url);
         $request->setBasicAuth($this->_user, $this->_passwd);
-        $request->addHeader('User-Agent', 'PEAR::Services_Delicious' );
-        
+        $request->addHeader('User-Agent', 'PEAR::Services_Delicious');
+
         $request->sendRequest();
         if ($request->getResponseCode() !== 200) {
             return PEAR::raiseError('Invalid Response Code', $request->getResponseCode());
