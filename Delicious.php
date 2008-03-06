@@ -131,8 +131,10 @@ class Services_Delicious
             return $result;
         }
         $tags = array();
-        foreach ($result['tag'] as $tmp) {
-            $tags[$tmp['tag']] = $tmp['count'];
+        if (is_array($result['tag'])) {
+            foreach ($result['tag'] as $tmp) {
+                $tags[$tmp['tag']] = $tmp['count'];
+            }
         }
         return $tags;
     }
@@ -179,8 +181,10 @@ class Services_Delicious
             return $result;
         }
         $dates = array();
-        foreach ($result['date'] as $tmp) {
-            $dates[$tmp['date']] = $tmp['count'];
+        if (is_array($result['date'])) {
+            foreach ($result['date'] as $tmp) {
+                $dates[$tmp['date']] = $tmp['count'];
+            }
         }
         return $dates;
     }
@@ -209,9 +213,11 @@ class Services_Delicious
         }
 
         $posts  = array();
-        foreach ($result['post'] as $post) {
-            $post['tag'] = explode(' ', $post['tag']);
-            array_push($posts, $post);
+        if (!empty($result['post']) && is_array($result['post'])) {
+            foreach ($result['post'] as $post) {
+                $post['tag'] = explode(' ', $post['tag']);
+                $posts[] = $post;
+            }
         }
         return $posts;
     }
@@ -237,9 +243,11 @@ class Services_Delicious
         }
 
         $posts  = array();
-        foreach ($result['post'] as $post) {
-            $post['tag'] = explode(' ', $post['tag']);
-            array_push($posts, $post);
+        if (!empty($result['post']) && is_array($result['post'])) {
+            foreach ($result['post'] as $post) {
+                $post['tag'] = explode(' ', $post['tag']);
+                $posts[] = $post;
+            }
         }
         
         return $posts;
@@ -261,9 +269,11 @@ class Services_Delicious
         }
 
         $posts  = array();
-        foreach ($result['post'] as $post) {
-            $post['tag'] = explode(' ', $post['tag']);
-            array_push($posts, $post);
+        if (!empty($result['post']) && is_array($result['post'])) {
+            foreach ($result['post'] as $post) {
+                $post['tag'] = explode(' ', $post['tag']);
+                $posts[] = $post;
+            }
         }
         
         return $posts;
