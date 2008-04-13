@@ -49,7 +49,7 @@ require_once 'HTTP/Request.php';
  * your bookmarks from PHP.
  *
  * @author      Stephan Schmidt <schst@phap-tools.net>
- * @author      Tatsuya Tsuruoka <ttsuruoka@p4life.jp>
+ * @author      Tatsuya Tsuruoka <ttsuruoka@php.net>
  * @package     Services_Delicious
  * @version     0.5
  */
@@ -137,6 +137,85 @@ class Services_Delicious
             }
         }
         return $tags;
+    }
+
+
+   /**
+    * Retrieve all of a user's bundles
+    *
+    * This will return an associative array containing bundles
+    * in the keys and their tags in the values:
+    * <code>
+    * Array
+    * (
+    *    [music] => "ipod mp3 music"
+    * )
+    * </code>
+    *
+    * @access   public
+    * @return   array
+    */
+    function getTagsBundles()
+    {
+        $result = $this->_sendRequest('tags/bundles', 'all');
+        if (PEAR::isError($result)) {
+            return $result;
+        }
+
+        $bundles = array();
+        if (!empty($result['bundle']) && is_array($result['bundle'])) {
+            if (isset($result['bundle']['name'])) {
+                $bundles[$result['bundle']['name']] = $result['bundle']['tags'];
+            } else {
+                foreach ($result['bundle'] as $bundle) {
+                    $bundles[$bundle['name']] = $bundle['tags'];
+                }
+            }
+        }
+
+        return $bundles;
+    }
+
+   /**
+    * Assign a set of tags to a single bundle
+    *
+    * @access   public
+    * @param    string          bundle name
+    * @param    string|array    list of tags
+    * @return   boolean
+    */
+    function setTagsBundle($bundle, $tags)
+    {
+        if (is_array($tags)) {
+            $tags = implode(" ", $tags);
+        }
+
+        $params = array(
+                        'bundle'    => $bundle,
+                        'tags'      => $tags
+                    );
+
+        $result = $this->_sendRequest('tags/bundles', 'set', $params);
+
+        return $this->_resultToBoolean($result);
+    }
+
+   /**
+    * Delete a bundle
+    *
+    * @acces    public
+    * @param    string      bundle name
+    * @returnn  boolean
+    */
+    function deleteTagsBundle($bundle)
+    {
+        $params = array(
+                        'bundle' => $bundle
+                    );
+
+        $result = $this->_sendRequest('tags/bundles', 'delete', $params);
+
+        return $this->_resultToBoolean($result);
     }
     
    /**
@@ -342,6 +421,19 @@ class Services_Delicious
         
         return $this->_resultToBoolean($result);
     }
+    
+   /**
+    * Returns the last update time for the user
+    *
+    * @access   public
+    * @return   string
+    */
+    function getLastUpdate()
+    {
+        $result = $this->_sendRequest('posts', 'update');      
+
+        return $result['time'];
+    }
 
    /**
     * Auxiliary method to send a request
@@ -412,7 +504,7 @@ class Services_Delicious
         if (PEAR::isError($result)) {
             return $result;
         }
-        if ($result == 'done') {
+        if ($result == 'done' || $result == 'ok') {
             return true;
         }
         
