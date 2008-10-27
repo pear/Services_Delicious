@@ -7,7 +7,7 @@ if (file_exists('config-local.php')) {
 }
 
 if (empty($username)) {
-    echo 'add your username and password';
+    echo 'skip add your username and password';
     exit();
 }
 ?>

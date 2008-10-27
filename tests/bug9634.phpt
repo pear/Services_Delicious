@@ -1,6 +1,9 @@
 --TEST--
 Services_Delicious:bug#9634 foreach error on empty array
 --SKIPIF--
+<?php
+require_once 'config.php';
+?>
 --FILE--
 <?php
 require_once 'config.php';

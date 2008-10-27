@@ -1,6 +1,9 @@
 --TEST--
 Services_Delicious:Req#10026
 --SKIPIF--
+<?php
+require_once 'config.php';
+?>
 --FILE--
 <?php
 require_once 'config.php';
