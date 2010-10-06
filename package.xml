@@ -19,7 +19,7 @@ Services_Delicious allows you to select, add and delete your bookmarks from any 
   <active>yes</active>
  </lead>
  <date>2010-10-06</date>
- <time>00:43:43</time>
+ <time>00:45:49</time>
  <version>
   <release>0.6.0</release>
   <api>0.6.0</api>
@@ -50,8 +50,9 @@ Bug #8528 	Invalid Response Code
    <file baseinstalldir="/" md5sum="cfa7b116cc904ab7d2a7801e7c78dd67" name="examples/getPosts.php" role="doc" />
    <file baseinstalldir="/" md5sum="8b1738c6347e7f072945676515908349" name="examples/getTags.php" role="doc" />
    <file baseinstalldir="/" md5sum="06339375b0ecc98e651f5f13d8cca60e" name="examples/renameTag.php" role="doc" />
-   <file baseinstalldir="/" md5sum="e484d445728f87dcf753497c643c4fce" name="Services/Delicious.php" role="php" />
+   <file baseinstalldir="/" md5sum="6fedb7cacbc311cf6d5ca5b5dcb0c4d5" name="Services/Delicious.php" role="php" />
    <file baseinstalldir="/" md5sum="427151a23eef442624eabd01bffcb026" name="tests/addPost.xml" role="test" />
+   <file baseinstalldir="/" md5sum="1e228c69cd3834d8db4d1cbfe6211013" name="tests/AllTests.php" role="test" />
    <file baseinstalldir="/" md5sum="559757ea968ecc46b01e6977a1881274" name="tests/getPosts.xml" role="test" />
    <file baseinstalldir="/" md5sum="cd9d3118ff9bdd265f9d48d228d8dabb" name="tests/getRecentPosts.xml" role="test" />
    <file baseinstalldir="/" md5sum="8da9758eb4577a53b47a5da6e905db22" name="tests/getTagsBundles.xml" role="test" />
