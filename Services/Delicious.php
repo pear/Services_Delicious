@@ -1,7 +1,7 @@
 <?PHP
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
+// | PHP Version 5                                                        |
 // +----------------------------------------------------------------------+
 // | Copyright (c) 1997-2002 The PHP Group                                |
 // +----------------------------------------------------------------------+
@@ -31,7 +31,7 @@ require_once 'XML/Unserializer.php';
 /**
  * uses HTTP to send the request
  */
-require_once 'HTTP/Request.php';
+require_once 'HTTP/Request2.php';
 
 /**
  * Services_Delicious
@@ -55,75 +55,95 @@ require_once 'HTTP/Request.php';
  */
 class Services_Delicious
 {
-   /**
-    * URI of the REST API
-    *
-    * @access  private
-    * @var     string
-    */
-    var $_apiUrl = 'https://api.del.icio.us/v1';
-    
-   /**
-    * Username
-    *
-    * @access  private
-    * @var     string
-    */
-    var $_user   = null;
+    /**
+     * URI of the REST API
+     *
+     * @access  private
+     * @var     string
+     */
+    protected $_apiUrl = 'https://api.del.icio.us/v1';
 
-   /**
-    * password
-    *
-    * @access  private
-    * @var     string
-    */
-    var $_passwd = null;
-    
-   /**
-    * XML_Unserializer, used to parse the XML
-    *
-    * @access  private
-    * @var     object XML_Unserializer
-    */
-    var $_us = null;
-    
-   /**
-    * Last accessed time
-    *
-    * @access  private
-    * @var     integer
-    */
-    var $_last_time = null;
+    /**
+     * Username
+     *
+     * @access  private
+     * @var     string
+     */
+    protected $_user   = null;
 
-   /**
-    * Create a new client
-    *
-    * @access  public
-    * @param   string      username
-    * @param   string      password
-    */
-    function Services_Delicious($user, $passwd)
+    /**
+     * password
+     *
+     * @access  private
+     * @var     string
+     */
+    protected $_passwd = null;
+
+    /**
+     * XML_Unserializer, used to parse the XML
+     *
+     * @access  private
+     * @var     object XML_Unserializer
+     */
+    protected $_us = null;
+
+    /**
+     * Last accessed time
+     *
+     * @access  private
+     * @var     integer
+     */
+    protected $_last_time = null;
+
+    /**
+     * Create a new client
+     *
+     * @access  public
+     * @param   string      username
+     * @param   string      password
+     */
+    public function __construct($user, $passwd, HTTP_Request2 $request = null)
     {
         $this->_user   = $user;
         $this->_passwd = $passwd;
+
+        if (empty($request)) {
+            $request = new HTTP_Request2();
+        }
+
+        $this->setRequest($request);
+
+        $this->_us = &new XML_Unserializer();
+        $this->_us->setOption('parseAttributes', true);
+        $this->_us->setOption('forceEnum', array(
+                                                   'tag',
+                                                   'post',
+                                                   'date'
+                                                )
+                             );
+
     }
-    
-   /**
-    * Get all tags
-    *
-    * This will return an associative array containing tags
-    * in the keys and their occurences in the values:
-    * <code>
-    * Array
-    * (
-    *    [pear] => 1
-    *    [php] => 2
-    *)
-    *</code>
-    *
-    * @access  public
-    * @return  array
-    */
+
+    public function setRequest(HTTP_Request2 $request) {
+        $this->request = $request;
+    }
+
+    /**
+     * Get all tags
+     *
+     * This will return an associative array containing tags
+     * in the keys and their occurences in the values:
+     * <code>
+     * Array
+     * (
+     *    [pear] => 1
+     *    [php] => 2
+     *)
+     *</code>
+     *
+     * @access  public
+     * @return  array
+     */
     function getTags()
     {
         $result = $this->_sendRequest('tags', 'get');
@@ -140,21 +160,21 @@ class Services_Delicious
     }
 
 
-   /**
-    * Retrieve all of a user's bundles
-    *
-    * This will return an associative array containing bundles
-    * in the keys and their tags in the values:
-    * <code>
-    * Array
-    * (
-    *    [music] => "ipod mp3 music"
-    * )
-    * </code>
-    *
-    * @access   public
-    * @return   array
-    */
+    /**
+     * Retrieve all of a user's bundles
+     *
+     * This will return an associative array containing bundles
+     * in the keys and their tags in the values:
+     * <code>
+     * Array
+     * (
+     *    [music] => "ipod mp3 music"
+     * )
+     * </code>
+     *
+     * @access   public
+     * @return   array
+     */
     function getTagsBundles()
     {
         $result = $this->_sendRequest('tags/bundles', 'all');
@@ -176,14 +196,14 @@ class Services_Delicious
         return $bundles;
     }
 
-   /**
-    * Assign a set of tags to a single bundle
-    *
-    * @access   public
-    * @param    string          bundle name
-    * @param    string|array    list of tags
-    * @return   boolean
-    */
+    /**
+     * Assign a set of tags to a single bundle
+     *
+     * @access   public
+     * @param    string          bundle name
+     * @param    string|array    list of tags
+     * @return   boolean
+     */
     function setTagsBundle($bundle, $tags)
     {
         if (is_array($tags)) {
@@ -200,13 +220,13 @@ class Services_Delicious
         return $this->_resultToBoolean($result);
     }
 
-   /**
-    * Delete a bundle
-    *
-    * @acces    public
-    * @param    string      bundle name
-    * @returnn  boolean
-    */
+    /**
+     * Delete a bundle
+     *
+     * @acces    public
+     * @param    string      bundle name
+     * @returnn  boolean
+     */
     function deleteTagsBundle($bundle)
     {
         $params = array(
@@ -217,15 +237,15 @@ class Services_Delicious
 
         return $this->_resultToBoolean($result);
     }
-    
-   /**
-    * Rename a tag
-    *
-    * @access   public
-    * @param    string      old name
-    * @param    string      new name
-    * @return   boolean
-    */
+
+    /**
+     * Rename a tag
+     *
+     * @access   public
+     * @param    string      old name
+     * @param    string      new name
+     * @return   boolean
+     */
     function renameTag($old, $new)
     {
         $params = array(
@@ -233,26 +253,26 @@ class Services_Delicious
                         'new' => $new
                     );
         $result = $this->_sendRequest('tags', 'rename', $params);
-        
+
         return $this->_resultToBoolean($result);
     }
 
-   /**
-    * Get all dates on which posts have been added.
-    *
-    * This will return an associative array containing dates
-    * in the keys and their occurences in the values:
-    * <code>
-    * Array
-    * (
-    *    [2004-11-01] => 1
-    *    [2004-11-02] => 2
-    *)
-    *</code>
-    *
-    * @access  public
-    * @return  array
-    */
+    /**
+     * Get all dates on which posts have been added.
+     *
+     * This will return an associative array containing dates
+     * in the keys and their occurences in the values:
+     * <code>
+     * Array
+     * (
+     *    [2004-11-01] => 1
+     *    [2004-11-02] => 2
+     *)
+     *</code>
+     *
+     * @access  public
+     * @return  array
+     */
     function getDates()
     {
         $result = $this->_sendRequest('posts', 'dates');
@@ -267,15 +287,15 @@ class Services_Delicious
         }
         return $dates;
     }
-    
-   /**
-    * Get posts
-    *
-    * @access   public
-    * @param    string|array    one or more tags
-    * @param    string          date
-    * @return   array
-    */
+
+    /**
+     * Get posts
+     *
+     * @access   public
+     * @param    string|array    one or more tags
+     * @param    string          date
+     * @return   array
+     */
     function getPosts($tags = array(), $date = null)
     {
         $params = array();
@@ -285,7 +305,7 @@ class Services_Delicious
         if (!empty($date)) {
             $params['dt'] = $date;
         }
-        
+
         $result = $this->_sendRequest('posts', 'get', $params);
         if (PEAR::isError($result)) {
             return $result;
@@ -300,22 +320,22 @@ class Services_Delicious
         }
         return $posts;
     }
-    
-   /**
-    * Get recent posts
-    *
-    * @access   public
-    * @param    string|array    one or more tags
-    * @param    integer         maximum amount
-    * @return   array
-    */
+
+    /**
+     * Get recent posts
+     *
+     * @access   public
+     * @param    string|array    one or more tags
+     * @param    integer         maximum amount
+     * @return   array
+     */
     function getRecentPosts($tags = array(), $max = 15)
     {
         $params = array('count' => $max);
         if (!empty($tags)) {
             $params['tag'] = $tags;
         }
-        
+
         $result = $this->_sendRequest('posts', 'recent', $params);
         if (PEAR::isError($result)) {
             return $result;
@@ -328,18 +348,18 @@ class Services_Delicious
                 $posts[] = $post;
             }
         }
-        
+
         return $posts;
     }
 
-   /**
-    * Get all posts
-    *
-    * @access   public
-    * @param    string|array    one or more tags
-    * @param    string          date
-    * @return   array
-    */
+    /**
+     * Get all posts
+     *
+     * @access   public
+     * @param    string|array    one or more tags
+     * @param    string          date
+     * @return   array
+     */
     function getAllPosts()
     {
         $result = $this->_sendRequest('posts', 'all');
@@ -354,22 +374,22 @@ class Services_Delicious
                 $posts[] = $post;
             }
         }
-        
+
         return $posts;
     }
 
-   /**
-    * Add a post
-    *
-    * @access   public
-    * @param    string|array    url or all data for the post
-    * @param    string          description
-    * @param    string          extended description
-    * @param    string          tags for the items
-    * @param    string          datestamp
-    * @param    string          make the item private if "$shared = 'no'"
-    * @return   boolean
-    */
+    /**
+     * Add a post
+     *
+     * @access   public
+     * @param    string|array    url or all data for the post
+     * @param    string          description
+     * @param    string          extended description
+     * @param    string          tags for the items
+     * @param    string          datestamp
+     * @param    string          make the item private if "$shared = 'no'"
+     * @return   boolean
+     */
     function addPost($url, $description = null, $extended = null, $tags = null, $date = null, $shared = null)
     {
         if (is_array($url)) {
@@ -395,22 +415,22 @@ class Services_Delicious
                              'shared'      => $shared
                             );
         }
-        
+
         $result = $this->_sendRequest('posts', 'add', $params);
-        
+
         return $this->_resultToBoolean($result);
     }
 
-   /**
-    * Delete a post
-    *
-    * @access   public
-    * @param    string|array    url or all data for the post
-    * @param    string          description
-    * @param    string          extended description
-    * @param    
-    * @return   boolean
-    */
+    /**
+     * Delete a post
+     *
+     * @access   public
+     * @param    string|array    url or all data for the post
+     * @param    string          description
+     * @param    string          extended description
+     * @param
+     * @return   boolean
+     */
     function deletePost($url)
     {
         $params = array(
@@ -418,32 +438,32 @@ class Services_Delicious
                        );
 
         $result = $this->_sendRequest('posts', 'delete', $params);
-        
+
         return $this->_resultToBoolean($result);
     }
-    
-   /**
-    * Returns the last update time for the user
-    *
-    * @access   public
-    * @return   string
-    */
+
+    /**
+     * Returns the last update time for the user
+     *
+     * @access   public
+     * @return   string
+     */
     function getLastUpdate()
     {
-        $result = $this->_sendRequest('posts', 'update');      
+        $result = $this->_sendRequest('posts', 'update');
 
         return $result['time'];
     }
 
-   /**
-    * Auxiliary method to send a request
-    *
-    * @access   private
-    * @param    string      what to fetch
-    * @param    string      action
-    * @param    array       parameters
-    * @return   array|PEAR_Error
-    */
+    /**
+     * Auxiliary method to send a request
+     *
+     * @access   private
+     * @param    string      what to fetch
+     * @param    string      action
+     * @param    array       parameters
+     * @return   array|PEAR_Error
+     */
     function _sendRequest($subject, $verb, $params = array())
     {
         list($usec, $sec) = explode(' ', microtime());
@@ -453,7 +473,7 @@ class Services_Delicious
         if ($current_time - $last_time < 1000) {
             return PEAR::raiseError('Wait 1 second between queries');
         }
-        
+
         $url = sprintf('%s/%s/%s?', $this->_apiUrl, $subject, $verb);
         foreach ($params as $key => $value) {
             if (is_array($value)) {
@@ -461,29 +481,18 @@ class Services_Delicious
             }
             $url = $url . '&' . $key . '=' . urlencode($value);
         }
-        
-        $request = &new HTTP_Request($url);
-        $request->setBasicAuth($this->_user, $this->_passwd);
-        $request->addHeader('User-Agent', 'PEAR::Services_Delicious');
 
-        $request->sendRequest();
-        if ($request->getResponseCode() !== 200) {
-            return PEAR::raiseError('Invalid Response Code', $request->getResponseCode());
+        $this->request->setURL($url);
+        $this->request->setAuth($this->_user, $this->_passwd);
+        $this->request->setHeader('User-Agent', 'PEAR::Services_Delicious');
+
+        $response = $this->request->send();
+        if ($response->getStatus() !== 200) {
+            return PEAR::raiseError('Invalid Response Code', $response->getStatus());
         }
-        
-        $xml = $request->getResponseBody();
-        
-        if (!is_object($this->_us)) {
-            $this->_us = &new XML_Unserializer();
-            $this->_us->setOption('parseAttributes', true);
-            $this->_us->setOption('forceEnum', array(
-                                                       'tag',
-                                                       'post',
-                                                       'date'
-                                                    )
-                                 );
-        }
-        
+
+        $xml = $response->getBody();
+
         $result = $this->_us->unserialize($xml);
         if (PEAR::isError($result)) {
             return $result;
@@ -491,14 +500,14 @@ class Services_Delicious
         return $this->_us->getUnserializedData();
     }
 
-   /**
-    * convert a result from del.icio.us to a boolean
-    * value or PEAR_Error
-    *
-    * @access   private
-    * @param    mixed
-    * @return   boolean
-    */
+    /**
+     * convert a result from del.icio.us to a boolean
+     * value or PEAR_Error
+     *
+     * @access   private
+     * @param    mixed
+     * @return   boolean
+     */
     function _resultToBoolean($result)
     {
         if (PEAR::isError($result)) {
@@ -507,7 +516,7 @@ class Services_Delicious
         if ($result == 'done' || $result == 'ok') {
             return true;
         }
-        
+
         if ($result['code'] == 'done') {
             return true;
         }
@@ -519,4 +528,3 @@ class Services_Delicious
         return PEAR::raiseError('Error from del.icio.us: '. $error);
     }
 }
-?>
